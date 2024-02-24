@@ -8,6 +8,7 @@ import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
 import org.academiadecodigo.simplegraphics.mouse.Mouse;
 import org.academiadecodigo.simplegraphics.mouse.MouseEvent;
+import org.academiadecodigo.simplegraphics.mouse.MouseEventType;
 import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
@@ -24,21 +25,25 @@ public class Game implements KeyboardHandler, MouseHandler {
     private boolean isPainting;
 
     public Game() {
-        gameGrid = new GameGrid(50, 50);
+        gameGrid = new GameGrid(90, 50);
         pointer = new PointerObject(gameGrid.getPadding(), gameGrid.getPadding(), gameGrid.getCellDimentions(), gameGrid.getCellDimentions());
         moveChecker = new PointerObject(gameGrid.getPadding(), gameGrid.getPadding(), gameGrid.getCellDimentions(), gameGrid.getCellDimentions());
-        pointer.setColor(Color.BLACK);
+        pointer.setColor(Color.RED);
         pointer.fill();
         this.keyboardSetup();
-
+this.mouseSetup();
     }
 
-public void mouseSetup(){
-    Mouse mouse = new Mouse(this);
+    public void mouseSetup() {
+        Mouse mouse = new Mouse(this);
 
-  
+        MouseEvent mouseMove = new MouseEvent(0, 0, MouseEventType.MOUSE_MOVED);
+mouse.addEventListener(mouseMove.getEventType());
+        MouseEvent mouseClick = new MouseEvent(0, 0, MouseEventType.MOUSE_CLICKED);
+        mouse.addEventListener(mouseClick.getEventType());
 
-}
+
+    }
 
 
     public void keyboardSetup() {
@@ -142,9 +147,9 @@ public void mouseSetup(){
         if (!isColliding) {
             pointer.translate(pointerTranslateValueX, pointerTranslateValueY);
             moveChecker.translate(pointerTranslateValueX - moveCheckerTranslateValueX, pointerTranslateValueY - moveCheckerTranslateValueY);
-            System.out.println("moved");
+            System.out.println("moved keys");
         } else {
-            System.out.println("moved Back");
+            System.out.println("moved keys Back");
             moveChecker.translate(-moveCheckerTranslateValueX, -moveCheckerTranslateValueY);
         }
 
@@ -170,7 +175,7 @@ public void mouseSetup(){
     public void save() {
         FileWriter paintSaver;
         try {
-            paintSaver = new FileWriter("src/text.txt");
+            paintSaver = new FileWriter("text.txt");
 
             // Initializing BufferedWriter
             BufferedWriter paintSave = new BufferedWriter(paintSaver);
@@ -194,7 +199,6 @@ public void mouseSetup(){
         }
 
     }
-
 
 
     public void paste() throws IOException {
@@ -248,7 +252,7 @@ public void mouseSetup(){
                 };
             }
         }
-        FileReader reader = new FileReader("src/text.txt");
+        FileReader reader = new FileReader("text.txt");
         WordReader wr = new WordReader(reader);
         Iterator it = wr.iterator();
         int counter = -1;
@@ -310,7 +314,7 @@ public void mouseSetup(){
                 }
                 break;
             case KeyboardEvent.KEY_S:
-               save();
+                save();
                 break;
         }
 
@@ -330,11 +334,35 @@ public void mouseSetup(){
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
+       if(mouseEvent.getEventType().equals(MouseEventType.MOUSE_CLICKED)){
+           paintCellsUnderMouse(mouseEvent,gameGrid);
+
+           System.out.println("clicked");
+
+        }
 
     }
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
+        if(mouseEvent.getEventType().equals(MouseEventType.MOUSE_MOVED)){
+            System.out.println("moved" + mouseEvent.getX() + mouseEvent.getY());
+            if(isPainting){
 
+                paintCellsUnderMouse(mouseEvent,gameGrid);
+            }
+        }
+
+
+    }
+
+    private void paintCellsUnderMouse(MouseEvent mouveEvent, GameGrid gameGrid){
+        for (int i = 0; i < gameGrid.getGridCells().size(); i++) {
+            if (mouveEvent.getX() > gameGrid.getGridCells().get(i).getRectangle().getX() && mouveEvent.getX() < gameGrid.getGridCells().get(i).getRectangle().getX()+gameGrid.getCellDimentions() && mouveEvent.getY()-30 > gameGrid.getGridCells().get(i).getRectangle().getY() && mouveEvent.getY()-30 < gameGrid.getGridCells().get(i).getRectangle().getY()+gameGrid.getCellDimentions()){
+                gameGrid.getGridCells().get(i).fill();
+                gameGrid.getGridCells().get(i).setPainted(true);
+
+            }
+        }
     }
 }
