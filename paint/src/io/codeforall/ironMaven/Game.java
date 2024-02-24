@@ -6,6 +6,9 @@ import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
+import org.academiadecodigo.simplegraphics.mouse.Mouse;
+import org.academiadecodigo.simplegraphics.mouse.MouseEvent;
+import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 import java.io.*;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Game implements KeyboardHandler {
+public class Game implements KeyboardHandler, MouseHandler {
 
     private GameGrid gameGrid;
     private PointerObject pointer;
@@ -29,6 +32,13 @@ public class Game implements KeyboardHandler {
         this.keyboardSetup();
 
     }
+
+public void mouseSetup(){
+    Mouse mouse = new Mouse(this);
+
+  
+
+}
 
 
     public void keyboardSetup() {
@@ -315,6 +325,16 @@ public class Game implements KeyboardHandler {
 
                 break;
         }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent mouseEvent) {
 
     }
 }
