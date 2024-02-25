@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class GameGrid {
 
-    private int cellDimentions = 10;
+    private int cellDimentions = 30;
     private int padding = 10;
     private int cols;
     private int rows;

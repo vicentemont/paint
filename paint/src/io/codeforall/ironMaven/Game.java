@@ -25,7 +25,7 @@ public class Game implements KeyboardHandler, MouseHandler {
     private boolean isPainting;
 
     public Game() {
-        gameGrid = new GameGrid(90, 50);
+        gameGrid = new GameGrid(21, 21);
         pointer = new PointerObject(gameGrid.getPadding(), gameGrid.getPadding(), gameGrid.getCellDimentions(), gameGrid.getCellDimentions());
         moveChecker = new PointerObject(gameGrid.getPadding(), gameGrid.getPadding(), gameGrid.getCellDimentions(), gameGrid.getCellDimentions());
         pointer.setColor(Color.RED);
@@ -335,7 +335,9 @@ mouse.addEventListener(mouseMove.getEventType());
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
        if(mouseEvent.getEventType().equals(MouseEventType.MOUSE_CLICKED)){
-           paintCellsUnderMouse(mouseEvent,gameGrid);
+Thread thread = new Thread(new PaintCells(mouseEvent,gameGrid));
+thread.start();
+
 
            System.out.println("clicked");
 
@@ -349,20 +351,13 @@ mouse.addEventListener(mouseMove.getEventType());
             System.out.println("moved" + mouseEvent.getX() + mouseEvent.getY());
             if(isPainting){
 
-                paintCellsUnderMouse(mouseEvent,gameGrid);
+                Thread thread = new Thread(new PaintCells(mouseEvent,gameGrid));
+                thread.start();
             }
         }
 
 
     }
 
-    private void paintCellsUnderMouse(MouseEvent mouveEvent, GameGrid gameGrid){
-        for (int i = 0; i < gameGrid.getGridCells().size(); i++) {
-            if (mouveEvent.getX() > gameGrid.getGridCells().get(i).getRectangle().getX() && mouveEvent.getX() < gameGrid.getGridCells().get(i).getRectangle().getX()+gameGrid.getCellDimentions() && mouveEvent.getY()-30 > gameGrid.getGridCells().get(i).getRectangle().getY() && mouveEvent.getY()-30 < gameGrid.getGridCells().get(i).getRectangle().getY()+gameGrid.getCellDimentions()){
-                gameGrid.getGridCells().get(i).fill();
-                gameGrid.getGridCells().get(i).setPainted(true);
 
-            }
-        }
-    }
 }
